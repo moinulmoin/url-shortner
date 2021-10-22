@@ -1,128 +1,36 @@
-import axios from 'axios';
 import { useState } from 'react';
+import { useGlobalContext } from '../context/GlobalContext';
 import Toast from './Toast';
 
 const CreateShortUrl = () => {
+	const {
+		state,
+		getAllUrl,
+		handleDeleteUrl,
+		handleCopyToClipboard,
+		shortenUrl,
+	} = useGlobalContext();
+
+	const { currentShortenedURl, toast } = state;
+
 	const [nameForUrl, setNameForUrl] = useState('');
 	const [longUrl, setLongUrl] = useState('');
-	const [shortenedUrlData, setShortUrlData] = useState({});
-	const [showToast, setShowToast] = useState(false);
-	const [toastText, setToastText] = useState('');
-	const [toastStyle, setToastStyle] = useState('');
 
-	const makeShortenUrl = async (e) => {
+	const handleShortenURL = async (e) => {
 		e.preventDefault();
-
-		if (nameForUrl === '' || longUrl === '') {
-			alert('Enter valid name/url to shorten');
-			return;
-		}
-
-		const data = {
-			domain: { fullName: 'link.moinulmoin.com' },
-			destination: longUrl,
-			title: nameForUrl,
-		};
-
-		const headers = {
-			apikey: process.env.NEXT_PUBLIC_REBRANDLY_API_KEY,
-		};
-
-		try {
-			const response = await axios.post(
-				'https://api.rebrandly.com/v1/links',
-				data,
-				{
-					headers,
-				}
-			);
-			console.log(response.data);
-			const { id, shortUrl: url, title: name } = response.data;
-
-			setShortUrlData({ id, url, name });
-
-			setShowToast(true);
-			setToastText('URL Shortened!');
-			setToastStyle('success');
-			setTimeout(() => {
-				setShowToast(false);
-				setToastText('');
-				setToastStyle('');
-			}, 1000);
-		} catch (error) {
-			setShowToast(true);
-			setToastText(error.message);
-			setToastStyle('error');
-			setTimeout(() => {
-				setShowToast(false);
-				setToastText('');
-				setToastStyle('');
-			}, 1000);
-		}
-
+		await shortenUrl(nameForUrl, longUrl);
+		await getAllUrl();
 		setNameForUrl('');
 		setLongUrl('');
 	};
 
-	const handleDeleteShortUrlData = async (urlId) => {
-		try {
-			await axios.delete(`https://api.rebrandly.com/v1/links/${urlId}`, {
-				headers: {
-					apikey: process.env.NEXT_PUBLIC_REBRANDLY_API_KEY,
-				},
-			});
-			setShortUrlData({});
-
-			setShowToast(true);
-			setToastText('Deleted!');
-			setToastStyle('error');
-			setTimeout(() => {
-				setShowToast(false);
-				setToastText('');
-				setToastStyle('');
-			}, 1000);
-		} catch (error) {
-			setShowToast(true);
-			setToastText(error.message);
-			setToastStyle('error');
-			setTimeout(() => {
-				setShowToast(false);
-				setToastText('');
-				setToastStyle('');
-			}, 1000);
-		}
-	};
-
-	const handleCopyToClipboard = async () => {
-		if (shortenedUrlData.url) {
-			navigator.clipboard
-				.writeText(shortenedUrlData.url)
-				.then(() => {
-					setShowToast(true);
-					setToastText('Copied');
-					setToastStyle('success');
-
-					setTimeout(() => {
-						setShowToast(false);
-						setToastText('');
-						setToastStyle('');
-					}, 1000);
-				})
-				.catch(() => {
-					setShowToast(true);
-					setToastText('Failed to copy');
-					setToastStyle('error');
-					setTimeout(() => {
-						setShowToast(false);
-						setToastText('');
-						setToastStyle('');
-					}, 1000);
-				});
-		}
-	};
 	return (
 		<div className='flex flex-col gap-y-10'>
-			<Toast text={toastText} style={toastStyle} isShowing={showToast} />
+			<Toast
+				text={toast.text}
+				style={toast.style}
+				isShowing={toast.isShowing}
+			/>
 
 			<form className='flex gap-x-2 items-center'>
 				<input
@@ -141,24 +49,24 @@ const CreateShortUrl = () => {
 				/>
 				<button
 					type='submit'
-					onClick={makeShortenUrl}
+					onClick={handleShortenURL}
 					className='px-4 py-2 bg-blue-600 text-white focus:border-0 focus:outline-none rounded'
 				>
 					Shorten your link
 				</button>
 			</form>
-			{shortenedUrlData && shortenedUrlData.url && (
+			{currentShortenedURl && currentShortenedURl.title && (
 				<div className='flex justify-between bg-gray-800 p-3 rounded'>
 					<div className='flex gap-x-10 items-center'>
 						<span className='text-blue-500 font-bold'>
-							{shortenedUrlData.name}
+							{currentShortenedURl.description}
 						</span>
-						<span>{shortenedUrlData.url}</span>
+						<span>{currentShortenedURl.title}</span>
 					</div>
 
 					<div className='flex items-center gap-x-8'>
 						<a
-							href={`https://${shortenedUrlData.url}`}
+							href={`https://${currentShortenedURl.title}`}
 							target='_blank'
 						>
 							<svg
@@ -197,7 +105,7 @@ const CreateShortUrl = () => {
 						<button
 							type='button'
 							onClick={() =>
-								handleDeleteShortUrlData(shortenedUrlData.id)
+								handleDeleteUrl(currentShortenedURl.id)
 							}
 						>
 							<svg

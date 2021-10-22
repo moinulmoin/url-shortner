@@ -1,8 +1,9 @@
 import Head from 'next/head';
-import AllShortUrl from '../components/AllShortUrl';
+import AllUrl from '../components/AllUrl';
 import CreateShortUrl from '../components/CreateShortUrl';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
+import { GlobalContextProvider } from '../context/GlobalContext';
 
 export default function Home() {
 	return (
@@ -27,8 +28,10 @@ export default function Home() {
 			<main className='h-[calc(100vh-168px)] mt-14'>
 				<div className='container mx-auto'>
 					<div className='flex flex-col gap-y-10'>
-						<CreateShortUrl />
-						<AllShortUrl />
+						<GlobalContextProvider>
+							<CreateShortUrl />
+							<AllUrl />
+						</GlobalContextProvider>
 					</div>
 				</div>
 			</main>
