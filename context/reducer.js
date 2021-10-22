@@ -49,17 +49,18 @@ const reducer = (state, action) => {
 			return {
 				...state,
 				currentShortenedURl: action.payload,
-				toast: {
-					isShowing: true,
-					text: 'URL shortened Successfully',
-					style: 'success',
-				},
 			};
 
 		case 'UPDATE_URLS':
 			return {
 				...state,
 				allUrls: action.payload,
+			};
+
+		case 'NO_URL':
+			return {
+				...state,
+				noUrlText: action.payload,
 			};
 
 		default:

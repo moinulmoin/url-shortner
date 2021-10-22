@@ -1,13 +1,13 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useGlobalContext } from '../context/GlobalContext';
 import Spinner from './Spinner';
 import Toast from './Toast';
 
-const AllUrl = () => {
+const GetAllUrl = () => {
 	const { state, getAllUrl, handleDeleteUrl, handleCopyToClipboard } =
 		useGlobalContext();
 
-	const { loading, allUrls, toast } = state;
+	const { loading, allUrls, toast, noUrlText } = state;
 
 	const urlsNumber = allUrls.length;
 
@@ -33,9 +33,10 @@ const AllUrl = () => {
 				}`}
 			>
 				{loading && urlsNumber === 0 && <Spinner />}
-				{!loading && urlsNumber === 0 && (
+
+				{noUrlText && (
 					<div className='py-2 text-center text-white bg-red-500 border-solid rounded w-6/12 mx-auto text-lg'>
-						No url is available!
+						{noUrlText}
 					</div>
 				)}
 
@@ -44,10 +45,10 @@ const AllUrl = () => {
 						const { id, shortUrl: title, title: description } = url;
 						return (
 							<div
-								className='flex justify-between bg-gray-800 p-3 rounded'
+								className='flex flex-col gap-y-4 md:flex-row md:justify-between bg-gray-800 p-3 rounded'
 								key={id}
 							>
-								<div className='flex gap-x-10 items-center'>
+								<div className='flex gap-x-5 md:gap-x-10 items-center'>
 									<span className='text-blue-500 font-bold'>
 										{description}
 									</span>
@@ -55,7 +56,10 @@ const AllUrl = () => {
 								</div>
 
 								<div className='flex items-center gap-x-8'>
-									<a href={`https://${url}`} target='_blank'>
+									<a
+										href={`https://${title}`}
+										target='_blank'
+									>
 										<svg
 											xmlns='http://www.w3.org/2000/svg'
 											className='h-6 w-6 text-blue-500'
@@ -75,7 +79,7 @@ const AllUrl = () => {
 									<button
 										type='button'
 										onClick={() =>
-											handleCopyToClipboard(url)
+											handleCopyToClipboard(title)
 										}
 									>
 										<svg
@@ -122,4 +126,4 @@ const AllUrl = () => {
 	);
 };
 
-export default AllUrl;
+export default GetAllUrl;

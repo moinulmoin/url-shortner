@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import AllUrl from '../components/AllUrl';
+import GetAllUrl from '../components/GetAllUrl';
 import CreateShortUrl from '../components/CreateShortUrl';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
@@ -26,16 +26,15 @@ export default function Home() {
 			<Header />
 
 			<main className='h-[calc(100vh-168px)] mt-14'>
-				<div className='container mx-auto'>
+				<div className='container mx-auto px-4 xl:px-0'>
 					<div className='flex flex-col gap-y-10'>
 						<GlobalContextProvider>
 							<CreateShortUrl />
-							<AllUrl />
+							<GetAllUrl />
 						</GlobalContextProvider>
 					</div>
 				</div>
 			</main>
-			{/* <Toast /> */}
 
 			<Footer />
 		</div>

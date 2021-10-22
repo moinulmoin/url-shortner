@@ -32,18 +32,18 @@ const CreateShortUrl = () => {
 				isShowing={toast.isShowing}
 			/>
 
-			<form className='flex gap-x-2 items-center'>
+			<form className='flex flex-col md:flex-row gap-2 items-center'>
 				<input
 					type='text'
 					placeholder='Enter name for your link'
-					className='focus:ring-2 text-gray-900 w-3/12 rounded'
+					className='w-full focus:ring-2 text-gray-900 md:w-3/12 rounded'
 					value={nameForUrl}
 					onChange={(e) => setNameForUrl(e.target.value)}
 				/>
 				<input
 					type='text'
 					placeholder='Enter your link here'
-					className='focus:ring-2 flex-grow text-gray-900 rounded'
+					className='w-full md:w-auto focus:ring-2 flex-grow text-gray-900 rounded'
 					value={longUrl}
 					onChange={(e) => setLongUrl(e.target.value)}
 				/>
@@ -56,15 +56,15 @@ const CreateShortUrl = () => {
 				</button>
 			</form>
 			{currentShortenedURl && currentShortenedURl.title && (
-				<div className='flex justify-between bg-gray-800 p-3 rounded'>
-					<div className='flex gap-x-10 items-center'>
+				<div className='flex flex-col gap-y-4 md:flex-row md:justify-between bg-gray-800 p-3 rounded'>
+					<div className='flex gap-x-5 md:gap-x-10 items-center'>
 						<span className='text-blue-500 font-bold'>
 							{currentShortenedURl.description}
 						</span>
 						<span>{currentShortenedURl.title}</span>
 					</div>
 
-					<div className='flex items-center gap-x-8'>
+					<div className='flex items-center gap-8'>
 						<a
 							href={`https://${currentShortenedURl.title}`}
 							target='_blank'
@@ -85,7 +85,12 @@ const CreateShortUrl = () => {
 							</svg>
 						</a>
 
-						<button type='button' onClick={handleCopyToClipboard}>
+						<button
+							type='button'
+							onClick={() =>
+								handleCopyToClipboard(currentShortenedURl.title)
+							}
+						>
 							<svg
 								xmlns='http://www.w3.org/2000/svg'
 								className='h-6 w-6'

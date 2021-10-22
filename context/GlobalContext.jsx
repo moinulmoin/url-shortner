@@ -5,6 +5,7 @@ import reducer from './reducer';
 const initialState = {
 	loading: false,
 	allUrls: [],
+	noUrlText: '',
 	currentShortenedURl: {},
 	toast: {
 		isShowing: false,
@@ -63,6 +64,10 @@ export const GlobalContextProvider = ({ children }) => {
 				type: 'CURRENT_SHORTENED_URL',
 				payload: { id, title, description },
 			});
+			dispatch({
+				type: 'POSITIVE_TOAST',
+				payload: 'URL Shortened Successfully',
+			});
 			resetToastAfterTimeout();
 		} catch (error) {
 			dispatch({ type: 'NEGATIVE_TOAST', payload: error.message });
@@ -111,15 +116,19 @@ export const GlobalContextProvider = ({ children }) => {
 				dispatch({ type: 'CURRENT_SHORTENED_URL', payload: {} });
 			}
 			resetToastAfterTimeout();
+
+			if (state.allUrls.length === 0) {
+				dispatch({ type: 'NO_URL', payload: 'No URL is found' });
+			}
 		} catch (error) {
 			dispatch({ type: 'NEGATIVE_TOAST', payload: error.message });
 			resetToastAfterTimeout();
 		}
 	};
 
-	const handleCopyToClipboard = (url) => {
+	const handleCopyToClipboard = (text) => {
 		navigator.clipboard
-			.writeText(url)
+			.writeText(text)
 			.then(() => {
 				dispatch({
 					type: 'POSITIVE_TOAST',
