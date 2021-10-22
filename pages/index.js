@@ -24,7 +24,7 @@ export default function Home() {
 
 			<Header />
 
-			<main className='h-[calc(100vh-104px)] mt-14'>
+			<main className='h-[calc(100vh-168px)] mt-14'>
 				<div className='container mx-auto'>
 					<div className='flex flex-col gap-y-10'>
 						<CreateShortUrl />

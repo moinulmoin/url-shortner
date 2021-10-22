@@ -35,6 +35,7 @@ const AllShortUrl = () => {
 				setToastStyle('');
 			}, 1000);
 		} catch (error) {
+			setLoading(false);
 			setShowToast(true);
 			setToastText(error.message);
 			setToastStyle('error');
@@ -60,7 +61,7 @@ const AllShortUrl = () => {
 				allShortUrls.filter((shortUrl) => shortUrl.id !== urlId)
 			);
 			setShowToast(true);
-			setToastText('Deleted!');
+			setToastText('URL deleted');
 			setToastStyle('error');
 			setTimeout(() => {
 				setShowToast(false);
@@ -84,7 +85,7 @@ const AllShortUrl = () => {
 			.writeText(url)
 			.then(() => {
 				setShowToast(true);
-				setToastText('Copied!');
+				setToastText('Copied');
 				setToastStyle('success');
 				setTimeout(() => {
 					setShowToast(false);
@@ -94,7 +95,7 @@ const AllShortUrl = () => {
 			})
 			.catch(() => {
 				setShowToast(true);
-				setToastText('Failed to copy!');
+				setToastText('Failed to copy');
 				setToastStyle('error');
 				setTimeout(() => {
 					setShowToast(false);
@@ -106,7 +107,7 @@ const AllShortUrl = () => {
 
 	return (
 		<div>
-			{showToast && <Toast text={toastText} style={toastStyle} />}
+			<Toast text={toastText} style={toastStyle} isShowing={showToast} />
 
 			<h3 className='text-lg mb-3 font-semibold'>All Shortened Links:</h3>
 
@@ -121,7 +122,7 @@ const AllShortUrl = () => {
 					<div className='w-6 h-6 border-2 border-blue-600 border-solid rounded-full animate-spin border-r-blue-400'></div>
 				)}
 				{!loading && shortUrlsCount === 0 && (
-					<div className='py-2 text-center text-white bg-red-500 border-solid rounded '>
+					<div className='py-2 text-center text-white bg-red-500 border-solid rounded w-6/12 mx-auto text-lg'>
 						No url is available!
 					</div>
 				)}

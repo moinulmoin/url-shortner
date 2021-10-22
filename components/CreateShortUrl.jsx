@@ -65,7 +65,6 @@ const CreateShortUrl = () => {
 	};
 
 	const handleDeleteShortUrlData = async (urlId) => {
-		console.log(urlId);
 		try {
 			await axios.delete(`https://api.rebrandly.com/v1/links/${urlId}`, {
 				headers: {
@@ -100,7 +99,7 @@ const CreateShortUrl = () => {
 				.writeText(shortenedUrlData.url)
 				.then(() => {
 					setShowToast(true);
-					setToastText('Copied!');
+					setToastText('Copied');
 					setToastStyle('success');
 
 					setTimeout(() => {
@@ -111,7 +110,7 @@ const CreateShortUrl = () => {
 				})
 				.catch(() => {
 					setShowToast(true);
-					setToastText('Error!');
+					setToastText('Failed to copy');
 					setToastStyle('error');
 					setTimeout(() => {
 						setShowToast(false);
@@ -123,7 +122,7 @@ const CreateShortUrl = () => {
 	};
 	return (
 		<div className='flex flex-col gap-y-10'>
-			{showToast && <Toast text={toastText} style={toastStyle} />}
+			<Toast text={toastText} style={toastStyle} isShowing={showToast} />
 
 			<form className='flex gap-x-2 items-center'>
 				<input
