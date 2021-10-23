@@ -29,6 +29,7 @@ export const GlobalContextProvider = ({ children }) => {
 		}, 1000);
 	};
 
+	// shorten the given url
 	const shortenUrl = async (nameForUrl, longUrl) => {
 		if (nameForUrl === '' || longUrl === '') {
 			dispatch({
@@ -62,7 +63,7 @@ export const GlobalContextProvider = ({ children }) => {
 
 			dispatch({
 				type: 'CURRENT_SHORTENED_URL',
-				payload: { id, title, description },
+				payload: { id, title, description, status: 'new' },
 			});
 			dispatch({
 				type: 'POSITIVE_TOAST',
@@ -75,6 +76,7 @@ export const GlobalContextProvider = ({ children }) => {
 		}
 	};
 
+	// fetch and get all urls
 	const getAllUrl = async () => {
 		dispatch({ type: 'LOADING', payload: true });
 		try {
@@ -99,6 +101,7 @@ export const GlobalContextProvider = ({ children }) => {
 		}
 	};
 
+	// specific URL Delete functionality
 	const handleDeleteUrl = async (urlId) => {
 		try {
 			await axios.delete(`https://api.rebrandly.com/v1/links/${urlId}`, {
@@ -126,6 +129,7 @@ export const GlobalContextProvider = ({ children }) => {
 		}
 	};
 
+	// Copy to clipboard functionality
 	const handleCopyToClipboard = (text) => {
 		navigator.clipboard
 			.writeText(text)
@@ -142,6 +146,8 @@ export const GlobalContextProvider = ({ children }) => {
 			});
 	};
 
+	const handleShortenURL = () => {};
+
 	return (
 		<GlobalContext.Provider
 			value={{
@@ -149,8 +155,8 @@ export const GlobalContextProvider = ({ children }) => {
 				getAllUrl,
 				handleDeleteUrl,
 				handleCopyToClipboard,
+				handleShortenURL,
 				shortenUrl,
-				dispatch,
 			}}
 		>
 			{children}

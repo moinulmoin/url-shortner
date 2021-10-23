@@ -1,11 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useGlobalContext } from '../context/GlobalContext';
 import Spinner from './Spinner';
 import Toast from './Toast';
+import UrlButtons from './UrlButtons';
+import UrlContent from './UrlContent';
 
 const GetAllUrl = () => {
-	const { state, getAllUrl, handleDeleteUrl, handleCopyToClipboard } =
-		useGlobalContext();
+	const { state, getAllUrl } = useGlobalContext();
 
 	const { loading, allUrls, toast, noUrlText } = state;
 
@@ -17,6 +18,7 @@ const GetAllUrl = () => {
 
 	return (
 		<div>
+			{/* Toast for different alerts */}
 			<Toast
 				text={toast.text}
 				style={toast.style}
@@ -32,14 +34,17 @@ const GetAllUrl = () => {
 						: 'gap-y-5'
 				}`}
 			>
+				{/* Spinner while fetching */}
 				{loading && urlsNumber === 0 && <Spinner />}
 
+				{/* When No URL Available */}
 				{noUrlText && (
 					<div className='py-2 text-center text-white bg-red-500 border-solid rounded w-6/12 mx-auto text-lg'>
 						{noUrlText}
 					</div>
 				)}
 
+				{/* All URL are shown here */}
 				{urlsNumber > 0 &&
 					allUrls.map((url) => {
 						const { id, shortUrl: title, title: description } = url;
@@ -48,76 +53,12 @@ const GetAllUrl = () => {
 								className='flex flex-col gap-y-4 md:flex-row md:justify-between bg-gray-800 p-3 rounded'
 								key={id}
 							>
-								<div className='flex gap-x-5 md:gap-x-10 items-center'>
-									<span className='text-blue-500 font-bold'>
-										{description}
-									</span>
-									<span>{title}</span>
-								</div>
+								<UrlContent
+									title={title}
+									description={description}
+								/>
 
-								<div className='flex items-center gap-x-8'>
-									<a
-										href={`https://${title}`}
-										target='_blank'
-									>
-										<svg
-											xmlns='http://www.w3.org/2000/svg'
-											className='h-6 w-6 text-blue-500'
-											fill='none'
-											viewBox='0 0 24 24'
-											stroke='currentColor'
-										>
-											<path
-												strokeLinecap='round'
-												strokeLinejoin='round'
-												strokeWidth={2}
-												d='M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14'
-											/>
-										</svg>
-									</a>
-
-									<button
-										type='button'
-										onClick={() =>
-											handleCopyToClipboard(title)
-										}
-									>
-										<svg
-											xmlns='http://www.w3.org/2000/svg'
-											className='h-6 w-6'
-											fill='none'
-											viewBox='0 0 24 24'
-											stroke='currentColor'
-										>
-											<path
-												strokeLinecap='round'
-												strokeLinejoin='round'
-												strokeWidth={2}
-												d='M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z'
-											/>
-										</svg>
-									</button>
-
-									<button
-										type='button'
-										onClick={() => handleDeleteUrl(id)}
-									>
-										<svg
-											xmlns='http://www.w3.org/2000/svg'
-											className='h-6 w-6 text-red-600'
-											fill='none'
-											viewBox='0 0 24 24'
-											stroke='currentColor'
-										>
-											<path
-												strokeLinecap='round'
-												strokeLinejoin='round'
-												strokeWidth={2}
-												d='M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16'
-											/>
-										</svg>
-									</button>
-								</div>
+								<UrlButtons title={title} id={id} />
 							</div>
 						);
 					})}
